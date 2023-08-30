@@ -16,14 +16,14 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # 모델 로드
 model1 = models.resnet50(num_classes=3)
-model2 = models.efficientnet_b2(num_classes=3)
+model2 = models.efficientnet_b0(num_classes=3)
 # 모델 가중치 파일 로드
 device = torch.device('cpu')
 
 model1.load_state_dict(torch.load('normal_classification_48epoch.pth', map_location=device))
 model1.eval()
 
-model2.load_state_dict(torch.load('0826_09_1epoch.pth', map_location=device))
+model2.load_state_dict(torch.load('0827_30_b0_bestmodel.pth', map_location=device))
 model2.eval()
 
 
@@ -49,12 +49,14 @@ def preprocess_image2(image):
 
 
 
+k=0.15
+
 
 class Base64Request(BaseModel):
     base64_file: str
 
 
-k=0.1
+k=0.15
 
 # 이미지 업로드와 추론을 처리하는 엔드포인트
 @app.post("/predict")
