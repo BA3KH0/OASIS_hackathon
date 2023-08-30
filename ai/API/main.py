@@ -49,14 +49,12 @@ def preprocess_image2(image):
 
 
 
-k=0.15
-
 
 class Base64Request(BaseModel):
     base64_file: str
 
 
-k=0.15
+k=0.1
 
 # 이미지 업로드와 추론을 처리하는 엔드포인트
 @app.post("/predict")
