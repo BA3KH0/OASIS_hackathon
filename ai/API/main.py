@@ -7,12 +7,12 @@ from io import BytesIO
 import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
-from PIL import Image
+from PIL import Image, ImageFile
 import io
 
 app = FastAPI()
 handler = Mangum(app)
-
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # 모델 로드
 model1 = models.resnet50(num_classes=3)
