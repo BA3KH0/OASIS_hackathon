@@ -1,5 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
+import base64
+from pydantic import BaseModel
 from typing import List
+from mangum import Mangum
+from io import BytesIO
 import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
@@ -7,6 +11,8 @@ from PIL import Image
 import io
 
 app = FastAPI()
+handler = Mangum(app)
+
 
 # 모델 로드
 model1 = models.resnet50(num_classes=3)
@@ -42,12 +48,21 @@ def preprocess_image2(image):
     return transform(image).unsqueeze(0)
 
 
+
+k=0.15
+
+
+class Base64Request(BaseModel):
+    base64_file: str
+
+
 k=0.15
 
 # 이미지 업로드와 추론을 처리하는 엔드포인트
-@app.post("/predict/")
-async def predict(file: UploadFile):
-    image = Image.open(io.BytesIO(file.file.read()))
+@app.post("/predict")
+async def predict(image_base64: str = Form(...)):
+    image = Image.open(BytesIO(base64.b64decode(image_base64))).convert('RGB')
+    #image = Image.open(io.BytesIO(file.file.read()))
 
     preprocessed_image1 = preprocess_image1(image)
     with torch.no_grad():
